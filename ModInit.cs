@@ -33,7 +33,8 @@ namespace TrainingMissions
     public class TrainingMissionsSettings
     {
         public bool enableLogging = true;
-        public List<string> TrainingContractIDs = new List<string>();
+        public bool showRestoreNotification = true;
+        public Dictionary<string, int> TrainingContractIDs = new Dictionary<string, int>();
     }
 
 }

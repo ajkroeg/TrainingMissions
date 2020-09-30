@@ -12,7 +12,13 @@
 
 	"Settings": {
 			"enableLogging": true,
-			"TrainingContractIDs": ["SimpleBattle_TakeTheBait"]
+			"showRestoreNotification": true,
+			"TrainingContractIDs":
+			{
+				"SimpleBattle_TakeTheBait": 1,
+				"ThreeWayBattle_TestDrive": 2,
+				"ThreeWayBattle_ShowTheFlag": 0
+			}
 		},
     "Manifest": []
 }
