@@ -21,4 +21,8 @@ Settings:
 
 `showRestoreNotification` - bool, enable/disable post-contract notification telling user that their damaged/destroyed mechs have been restored to pre-contract state.
 
-`TrainingContractIDs` - `Dictionary<string, int>` - Dictionary of contract ID Keys and mission outcome Value requirements for which pre-contract mechs will be copied and then restored to the player after the contract. If mission outcome value requirement == 2, mechs will only be restored on a successful mission. If mission outcome value requirement ==1, mechs will be restored on a successful mission or good faith effort. If mission outcome value == 0 (default) or any other value, mechs will <i>always</i> be restored, regardless of mission outcome.
+`TrainingContractIDs` - `Dictionary<string, int>` - Dictionary of contract ID Keys and mission outcome Value requirements for which pre-contract mechs will be copied and then restored to the player after the contract.
+
+If mission outcome value requirement == `2`, mechs will only be restored on a successful mission. If mission outcome value requirement == `1`, mechs will be restored on a successful mission or good faith effort. If mission outcome value == `0` (default) or any other value, mechs will <i>always</i> be restored, regardless of mission outcome.
+
+Using the above settings, the contract "Show the Flag" will restore the players mechs regardless of mission outcome. "Take The Bait" will restore the players mechs if they achieve a "good faith effort" or success. "Test Drive" will restore the players mechs <i>only</i> on a successful mission.
