@@ -1,5 +1,7 @@
 # TrainingMissions
- Allows "training missions" that auto-repair and restore your damaged mechs after combat. Functionally copies mechs dropped by the player, including their custom loadouts (not including contract-specific pilots' mechs, e.g. Training Day mission urbies or Escort VIP Griffins). Notably, this will <i>not</i> exclude mechs provided by "Test Drive" contracts, so maybe don't use it for those. Or do, but adjust the contract rewards since the player will be getting a mech out of the deal.
+ <b>Allows "training missions" that auto-repair and restore your damaged and destroyed mechs after combat.</b>
+ 
+ Functionally copies mechs dropped by the player, including their custom loadouts (not including contract-specific pilots' mechs, e.g. Training Day mission urbies or Escort VIP Griffins). Notably, this will <i>not</i> exclude mechs provided by "Test Drive" contracts, so maybe don't use it for those. Or do, but adjust the contract rewards since the player will be getting a mech out of the deal.
 
 Player mechs are restored <i>after</i> the contract results have resolved. Thus, they will still see all the damage they incurred on the mission results screen, and will also recieve notifications for "Mech Destroyed and unable to be recovered", even if that mech will be restored.
 
