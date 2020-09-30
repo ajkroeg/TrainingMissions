@@ -5,9 +5,10 @@ Settings:
 
 ```
 "Settings": {
-			"enableLogging": true,
-			"showRestoreNotification": true,
-			"TrainingContractIDs":
+
+"enableLogging": true,
+"showRestoreNotification": true,
+"TrainingContractIDs":
    {
      "SimpleBattle_TakeTheBait": 1,
      "ThreeWayBattle_TestDrive": 2,
