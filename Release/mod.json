@@ -1,0 +1,18 @@
+{
+    "Name": "TrainingMissions",
+    "DLL": "TrainingMissions.dll",
+
+	"Hidden": true,
+    "Version": "1.0.0.0",
+    "Description": "",
+    "Author": "T-Bone",
+    "Website": "https://github.com/ajkroeg/TrainingMissions",
+    "ConflictsWith": [],
+    "CustomResourceTypes": [],
+
+	"Settings": {
+			"enableLogging": true,
+			"TrainingContractIDs": ["SimpleBattle_TakeTheBait"]
+		},
+    "Manifest": []
+}
