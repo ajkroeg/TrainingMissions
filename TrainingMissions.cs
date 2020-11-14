@@ -21,6 +21,8 @@ namespace TrainingMissions
             public static void Postfix(CombatGameState __instance, Contract contract, GameInstance game,
                 string localPlayerTeamGuid)
             {
+                if (__instance.ActiveContract.ContractTypeValue.IsSkirmish) return;
+
                 ModState.deployedMechs.Clear();
                 ModState.IsTrainingMission = false;
                 ModState.successReq = 0;
@@ -40,7 +42,10 @@ namespace TrainingMissions
         {
             public static void Postfix(Mech __instance, Team team)
             {
+                var combat = UnityGameInstance.BattleTechGame.Combat;
+                if (combat.ActiveContract.ContractTypeValue.IsSkirmish) return;
                 var sim = UnityGameInstance.BattleTechGame.Simulation;
+                
                 var p = __instance.pilot;
                 if (team.IsLocalPlayer && (sim.PilotRoster.Any(x=>x.Callsign == p.Callsign) || p.IsPlayerCharacter))
                 {
@@ -58,11 +63,13 @@ namespace TrainingMissions
         {
             public static void Prefix(SimGameState __instance, out Contract __state)
             {
+                var combat = UnityGameInstance.BattleTechGame.Combat;
                 __state = __instance.CompletedContract;
                 ModInit.modLog.LogMessage($"Contract added to state for postfix.");
             }
             public static void Postfix(SimGameState __instance, Contract __state)
             {
+                var combat = UnityGameInstance.BattleTechGame.Combat;
                 if (ModState.IsTrainingMission)
                 {
                     if (ModState.successReq == 2 && __state.State != Contract.ContractState.Complete)
