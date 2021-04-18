@@ -35,6 +35,8 @@ namespace TrainingMissions
         public bool enableLogging = true;
         public bool showRestoreNotification = true;
         public Dictionary<string, int> TrainingContractIDs = new Dictionary<string, int>();
+        public List<string> SwapUnitsWithAIContractIDs = new List<string>();
+        public List<string> DoppelgangerContractIDs = new List<string>();
     }
 
 }
