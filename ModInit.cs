@@ -26,6 +26,7 @@ namespace TrainingMissions
             }
 
             modLog = new Logger(modDir, "TrainingMissions", Settings.enableLogging);
+            ModInit.modLog.LogMessage($"Initializing TrainingMissions - Version {typeof(TrainingMissionsSettings).Assembly.GetName().Version}");
             var harmony = HarmonyInstance.Create(HarmonyPackage);
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
@@ -34,9 +35,11 @@ namespace TrainingMissions
     {
         public bool enableLogging = true;
         public bool showRestoreNotification = true;
-        public Dictionary<string, int> TrainingContractIDs = new Dictionary<string, int>();
-        public List<string> SwapUnitsWithAIContractIDs = new List<string>();
-        public List<string> DoppelgangerContractIDs = new List<string>();
+        public bool enableSimulationHotKey = true;
+        public Dictionary<string, string> TrainingContractIDs = new Dictionary<string, string>(); // SUCCESS, GOODFAITH, ALWAYS
+        public Dictionary<string, string> SwapUnitsWithAIContractIDs = new Dictionary<string, string>(); // SIMULATOR, RECOVER
+        public Dictionary<string, string> DoppelgangerContractIDs = new Dictionary<string, string>(); // SIMULATOR, RECOVER
+        public List<string> DisallowedRecoveryTags = new List<string>();
     }
 
 }

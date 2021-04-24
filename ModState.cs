@@ -18,19 +18,25 @@ namespace TrainingMissions
             public int count;
         }
 
-
         public static bool runContinueConfirmClickedPost = false;
 
-        public static bool IsTrainingMission = false;
+//        public static bool IsTrainingMission = false;
         public static bool IsSimulatorMission = false;
         public static bool AIGetsPlayerMechs = false;
         public static bool PlayerGetsAIMechs = false;
-        public static int successReq = 0;
+//        public static string successReq = "";
 
         public static List<MechDef> deployedMechs = new List<MechDef>();
 
         public static List<playerMechStore> playerMechs = new List<playerMechStore>();
         public static List<playerMechStore> AIMechs = new List<playerMechStore>();
 
+        public static List<MechDef> recoveredMechDefs = new List<MechDef>();
+
+        public static Dictionary<string, int> pilotStartingInjuries = new Dictionary<string, int>();
+
+        public static string contractID = "";
+
+        public static bool TBAS_Detected = false;
     }
 }
