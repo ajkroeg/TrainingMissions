@@ -1,9 +1,25 @@
 # TrainingMissions
- <b>Allows "training missions" that auto-repair and restore your damaged and destroyed mechs after combat.</b>
+
+## Training Missions
+
+Allows "training missions" that auto-repair and restore your damaged and destroyed mechs after combat.
  
- Functionally copies mechs dropped by the player, including their custom loadouts (not including contract-specific pilots' mechs, e.g. Training Day mission urbies or Escort VIP Griffins). Notably, this will <i>not</i> exclude mechs provided by "Test Drive" contracts, so maybe don't use it for those. Or do, but adjust the contract rewards since the player will be getting a mech out of the deal.
+Functionally copies mechs dropped by the player, including their custom loadouts (not including contract-specific pilots' mechs, e.g. Training Day mission urbies or Escort VIP Griffins). Notably, this will <i>not</i> exclude mechs provided by "Test Drive" contracts, so maybe don't use it for those. Or do, but adjust the contract rewards since the player will be getting a mech out of the deal.
 
 Player mechs are restored <i>after</i> the contract results have resolved. Thus, they will still see all the damage they incurred on the mission results screen, and will also recieve notifications for "Mech Destroyed and unable to be recovered", even if that mech will be restored.
+
+
+## Swap Forces contracts
+
+These contracts will swap your units with the opfors. Optionally can be designated a "simulation", where you can still get paid (per the contract def), but with no other lasting consequences good or bad (e.g. no injuries, but no reputation or salvage). If not designated a simulation, your mechs will be destroyed/salvaged like any other opfor, but you get to keep the mechs you got from the AI.
+
+## Doppelganger contracts
+
+These contracts duplicate your mechs and give them to the opfor. Optionally can be designated a "simulation", where you can still get paid (per the contract def), but with no other lasting consequences good or bad (e.g. no injuries, but no reputation or salvage). If not designated a simulation, your mechs will be recovered like normal, and you can salvage the "copies" as normal opfor mechs.
+
+## Simulation hotkey
+
+Holding shift while clicking the "Deploy" button designates any "normal" contract a "simulation", for which there will be no payment, no reputation change, no injuries taken, and no damage to mechs.
 
 Settings:
 
