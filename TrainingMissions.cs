@@ -37,6 +37,7 @@ namespace TrainingMissions
 
             public static void Prefix(LanceConfiguratorPanel __instance, LanceLoadoutSlot[] ___loadoutSlots, bool ___mechWarningsCheckResolved)
             {
+                ModState.runContinueConfirmClickedPost = false;
                 if (___mechWarningsCheckResolved)
                 {
                     ModState.runContinueConfirmClickedPost = true;

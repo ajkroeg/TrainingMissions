@@ -36,7 +36,5 @@ namespace TrainingMissions
         public static Dictionary<string, int> pilotStartingInjuries = new Dictionary<string, int>();
 
         public static string contractID = "";
-
-        public static bool TBAS_Detected = false;
     }
 }
