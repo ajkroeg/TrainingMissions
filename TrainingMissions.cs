@@ -84,12 +84,16 @@ namespace TrainingMissions
                     var hk = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
                     if (hk) ModState.IsSimulatorMission = true;
                 }
-                var newMech = new MechDef();
+
+                var nonNullSlots = ___loadoutSlots.Where(x => x.SelectedMech != null);
+
+                MechDef newMech;
+                var lanceLoadoutSlots = nonNullSlots as LanceLoadoutSlot[] ?? nonNullSlots.ToArray();
                 if (ModInit.Settings.SwapUnitsWithAIContractIDs.ContainsKey(contractID))
                 {
                     ModState.AIGetsPlayerMechs = true;
                     ModState.PlayerGetsAIMechs = true;
-                    foreach (var slot in ___loadoutSlots)
+                    foreach (var slot in lanceLoadoutSlots)
                     {
                         if (slot.SelectedMech?.MechDef == null) continue;
                         var newGUID = Guid.NewGuid().ToString();
@@ -104,7 +108,7 @@ namespace TrainingMissions
                 else if (ModInit.Settings.DoppelgangerContractIDs.ContainsKey(contractID))
                 {
                     ModState.AIGetsPlayerMechs = true;
-                    foreach (var slot in ___loadoutSlots)
+                    foreach (var slot in lanceLoadoutSlots)
                     {
                         if (slot.SelectedMech?.MechDef == null) continue; 
                         var newGUID = Guid.NewGuid().ToString();
@@ -119,7 +123,7 @@ namespace TrainingMissions
                 {
 //                    ModState.successReq = ModInit.Settings.TrainingContractIDs[contractID];
 //                    ModState.IsTrainingMission = true;
-                    foreach (var slot in ___loadoutSlots)
+                    foreach (var slot in lanceLoadoutSlots)
                     {
                         ModState.deployedMechs.Add(slot.SelectedMech.MechDef);
                         ModInit.modLog.LogMessage($"Adding {slot.SelectedMech.MechDef.Name} to deployedMechs for restore");
