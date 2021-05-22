@@ -3,15 +3,10 @@ using Harmony;
 using BattleTech;
 using System.Linq;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using BattleTech.Data;
 using BattleTech.Framework;
 using BattleTech.UI;
-using BattleTech.UI.Tooltips;
-using BestHTTP.SocketIO;
 using Localize;
-using Org.BouncyCastle.Asn1.X509;
 using UnityEngine;
 using static TrainingMissions.ModState;
 
@@ -261,15 +256,18 @@ namespace TrainingMissions
                             $"AI UNIT: Filtered to match mechdef IDs and reordered! First mech in playerMechVariants is now {playerMechVariants.First().mechDef.Name} with count {playerMechVariants.First().count}");
                         ModState.playerMechs.First().count += 1;
                         var newMechDef = playerMechVariants.FirstOrDefault()?.mechDef;
-                        newMechDef.DependenciesLoaded(1000U);
-                        mDef = newMechDef;
+                        if (newMechDef != null)
+                        {
+                            newMechDef.DependenciesLoaded(1000U);
+                            mDef = newMechDef;
+                        }
                     }
                 }
             }
         }
 
         [HarmonyPatch(typeof(AAR_UnitStatusWidget), "FillInData", new Type[] {typeof(int)})]
-        static class AAR_UnitStatusWidget_FillInDataPatch
+        public static class AAR_UnitStatusWidget_FillInDataPatch
         {
             public static void Postfix(AAR_UnitStatusWidget __instance, Contract ___contract, UnitResult ___UnitData)
             {
