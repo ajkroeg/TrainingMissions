@@ -3,7 +3,7 @@ using System.IO;
 
 namespace TrainingMissions
 {
-    class Logger
+    internal class Logger
     {
         private static StreamWriter logStreamWriter;
         private bool enableLogging = false;
