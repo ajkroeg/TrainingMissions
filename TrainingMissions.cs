@@ -3,9 +3,11 @@ using Harmony;
 using BattleTech;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
 using BattleTech.Data;
 using BattleTech.Framework;
 using BattleTech.UI;
+using IRBTModUtils;
 using Localize;
 using UnityEngine;
 using static TrainingMissions.ModState;
@@ -376,7 +378,9 @@ namespace TrainingMissions
                         }
                         foreach (var deployedMech in ModState.deployedMechs)
                         {
+                            Thread.CurrentThread.pushActorDef(deployedMech);
                             __instance.ActiveMechs.Add(__instance.GetFirstFreeMechBay(), deployedMech);
+                            Thread.CurrentThread.clearActorDef();
 
                             ModInit.modLog.LogMessage($"Added replacement {deployedMech.Name}");
                         }
@@ -394,8 +398,9 @@ namespace TrainingMissions
                         }
                         foreach (var recoveredMech in ModState.recoveredMechDefs)
                         {
+                            Thread.CurrentThread.pushActorDef(recoveredMech);
                             __instance.ActiveMechs.Add(__instance.GetFirstFreeMechBay(), recoveredMech);
-
+                            Thread.CurrentThread.clearActorDef();
                             ModInit.modLog.LogMessage($"Added replacement damaged {recoveredMech.Name}");
                         }
                     }
@@ -414,8 +419,9 @@ namespace TrainingMissions
 
                     foreach (var deployedMech in ModState.deployedMechs)
                     {
+                        Thread.CurrentThread.pushActorDef(deployedMech);
                         __instance.ActiveMechs.Add(__instance.GetFirstFreeMechBay(), deployedMech);
-
+                        Thread.CurrentThread.clearActorDef();
                         ModInit.modLog.LogMessage($"Added replacement {deployedMech.Name}");
                     }
                 }
@@ -443,14 +449,13 @@ namespace TrainingMissions
                             __instance.ActiveMechs.Remove(kvp.Key);
                             ModInit.modLog.LogMessage($"Removing old {kvp.Value.Name} from MechBay");
                         }
-
-                        
                     }
 
                     foreach (var deployedMech in ModState.deployedMechs)
                     {
+                        Thread.CurrentThread.pushActorDef(deployedMech);
                         __instance.ActiveMechs.Add(__instance.GetFirstFreeMechBay(), deployedMech);
-
+                        Thread.CurrentThread.clearActorDef();
                         ModInit.modLog.LogMessage($"Added replacement {deployedMech.Name}");
                     }
 

@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\SteamLibrary\steamapps\common\BATTLETECH\BattleTech_Data\Managed\InControl.dll</HintPath>
     </Reference>
+    <Reference Include="IRBTModUtils">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\BATTLETECH\Mods\IRBTModUtils\IRBTModUtils.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>D:\SteamLibrary\steamapps\common\BATTLETECH\BattleTech_Data\Managed\Newtonsoft.Json.dll</HintPath>
     </Reference>
