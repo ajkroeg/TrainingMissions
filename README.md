@@ -1,5 +1,7 @@
 # TrainingMissions
 
+**DependsOn IRBTModUtils**
+
 ## Training Missions
 
 Allows "training missions" that auto-repair and restore your damaged and destroyed mechs after combat.
