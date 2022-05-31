@@ -116,7 +116,7 @@ namespace TrainingMissions
                     }
                 }
 
-                if (ModInit.Settings.TrainingContractIDs.ContainsKey(contractID) || ModState.IsSimulatorMission)
+                if (ModInit.Settings.TrainingContractIDs.ContainsKey(contractID) || ModState.IsSimulatorMission || ModState.DynamicTrainingMissionsDict.ContainsKey(__instance.activeContract.GenerateID()))
                 {
 //                    ModState.successReq = ModInit.Settings.TrainingContractIDs[contractID];
 //                    ModState.IsTrainingMission = true;
@@ -426,15 +426,15 @@ namespace TrainingMissions
                     }
                 }
                 
-                if (ModInit.Settings.TrainingContractIDs.ContainsKey(__state.Override.ID)) 
+                if (ModInit.Settings.TrainingContractIDs.ContainsKey(__state.Override.ID) || ModState.DynamicTrainingMissionsDict.ContainsKey(__state.GenerateID())) 
                 {
-                    if (ModInit.Settings.TrainingContractIDs[contractID] == "SUCCESS" && __state.State != Contract.ContractState.Complete)
+                    if ((ModInit.Settings.TrainingContractIDs[contractID] == "SUCCESS" || ModState.DynamicTrainingMissionsDict[__state.GenerateID()] == "SUCCESS") && __state.State != Contract.ContractState.Complete)
                     {
                         ModInit.modLog.LogMessage($"Mission was not successful, not restoring mechs.");
                         return;
                     }
 
-                    if (ModInit.Settings.TrainingContractIDs[contractID] == "GOODFAITH" && !__state.IsGoodFaithEffort &&
+                    if ((ModInit.Settings.TrainingContractIDs[contractID] == "GOODFAITH" || ModState.DynamicTrainingMissionsDict[__state.GenerateID()] == "GOODFAITH") && !__state.IsGoodFaithEffort &&
                         (__state.State == Contract.ContractState.Failed || __state.State == Contract.ContractState.Retreated))
                     {
                         ModInit.modLog.LogMessage(
@@ -466,6 +466,10 @@ namespace TrainingMissions
                                 "As per the terms of the contract, our employer has repaired, replaced, and refitted our damaged and destroyed units. Our pilots are another story, however.",
                                 __instance.GetCrewPortrait(SimGameCrew.Crew_Darius), "", null, "Continue", null, null);
                     }
+                }
+                if (ModState.DynamicTrainingMissionsDict.ContainsKey(__state.GenerateID()))
+                {
+                    ModState.DynamicTrainingMissionsDict.Remove(__state.GenerateID());
                 }
                 ModState.IsSimulatorMission = false;
 //                ModState.IsTrainingMission = false;
