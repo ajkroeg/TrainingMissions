@@ -9,6 +9,7 @@ namespace TrainingMissions
         {
             var id = contract.GenerateID();
             ModState.DynamicTrainingMissionsDict.Add(id, repairRequirement);
+            ModInit.modLog.LogMessage($"Added contract with id {id} to dynamic training missions via external call");
         }
 
         public static string GenerateID(this Contract contract)
