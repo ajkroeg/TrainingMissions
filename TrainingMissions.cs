@@ -425,48 +425,75 @@ namespace TrainingMissions
                         ModInit.modLog.LogMessage($"Added replacement {deployedMech.Name}");
                     }
                 }
-                
-                if (ModInit.Settings.TrainingContractIDs.ContainsKey(__state.Override.ID) || ModState.DynamicTrainingMissionsDict.ContainsKey(__state.GenerateID())) 
+
+                if (ModInit.Settings.TrainingContractIDs.ContainsKey(__state.Override.ID))
                 {
-                    if ((ModInit.Settings.TrainingContractIDs[contractID] == "SUCCESS" || ModState.DynamicTrainingMissionsDict[__state.GenerateID()] == "SUCCESS") && __state.State != Contract.ContractState.Complete)
+                    if (ModInit.Settings.TrainingContractIDs[contractID] == "SUCCESS" &&
+                        __state.State != Contract.ContractState.Complete)
                     {
                         ModInit.modLog.LogMessage($"Mission was not successful, not restoring mechs.");
                         return;
                     }
 
-                    if ((ModInit.Settings.TrainingContractIDs[contractID] == "GOODFAITH" || ModState.DynamicTrainingMissionsDict[__state.GenerateID()] == "GOODFAITH") && !__state.IsGoodFaithEffort &&
-                        (__state.State == Contract.ContractState.Failed || __state.State == Contract.ContractState.Retreated))
+                    if (ModInit.Settings.TrainingContractIDs[contractID] == "GOODFAITH" &&
+                        !__state.IsGoodFaithEffort &&
+                        (__state.State == Contract.ContractState.Failed ||
+                         __state.State == Contract.ContractState.Retreated))
                     {
                         ModInit.modLog.LogMessage(
                             $"Mission failed, not restoring mechs.");
                         return;
                     }
+                    goto continu;
+                }
 
-                    foreach (var kvp in new Dictionary<int, MechDef>(__instance.ActiveMechs))
+                if (ModState.DynamicTrainingMissionsDict.ContainsKey(__state.GenerateID()))
+                {
+                    if (ModState.DynamicTrainingMissionsDict[__state.GenerateID()] == "SUCCESS" &&
+                        __state.State != Contract.ContractState.Complete)
                     {
-                        if (ModState.deployedMechs.Any(x => x.GUID == kvp.Value.GUID))
-                        {
-                            __instance.ActiveMechs.Remove(kvp.Key);
-                            ModInit.modLog.LogMessage($"Removing old {kvp.Value.Name} from MechBay");
-                        }
+                        ModInit.modLog.LogMessage($"Mission was not successful, not restoring mechs.");
+                        return;
                     }
 
-                    foreach (var deployedMech in ModState.deployedMechs)
+                    if (ModState.DynamicTrainingMissionsDict[__state.GenerateID()] == "GOODFAITH" &&
+                        !__state.IsGoodFaithEffort &&
+                        (__state.State == Contract.ContractState.Failed ||
+                         __state.State == Contract.ContractState.Retreated))
                     {
-                        Thread.CurrentThread.pushActorDef(deployedMech);
-                        __instance.ActiveMechs.Add(__instance.GetFirstFreeMechBay(), deployedMech);
-                        Thread.CurrentThread.clearActorDef();
-                        ModInit.modLog.LogMessage($"Added replacement {deployedMech.Name}");
+                        ModInit.modLog.LogMessage(
+                            $"Mission failed, not restoring mechs.");
+                        return;
                     }
-
-                    if (ModInit.Settings.showRestoreNotification && ModState.deployedMechs.Count > 0)
+                    goto continu;
+                }
+                return;
+                continu:
+                foreach (var kvp in new Dictionary<int, MechDef>(__instance.ActiveMechs))
+                {
+                    if (ModState.deployedMechs.Any(x => x.GUID == kvp.Value.GUID))
                     {
-                        Traverse.Create(__instance).Field("interruptQueue").GetValue<SimGameInterruptManager>()
-                            .QueuePauseNotification("Mechs Restored",
-                                "As per the terms of the contract, our employer has repaired, replaced, and refitted our damaged and destroyed units. Our pilots are another story, however.",
-                                __instance.GetCrewPortrait(SimGameCrew.Crew_Darius), "", null, "Continue", null, null);
+                        __instance.ActiveMechs.Remove(kvp.Key);
+                        ModInit.modLog.LogMessage($"Removing old {kvp.Value.Name} from MechBay");
                     }
                 }
+
+                foreach (var deployedMech in ModState.deployedMechs)
+                {
+                    Thread.CurrentThread.pushActorDef(deployedMech);
+                    __instance.ActiveMechs.Add(__instance.GetFirstFreeMechBay(), deployedMech);
+                    Thread.CurrentThread.clearActorDef();
+                    ModInit.modLog.LogMessage($"Added replacement {deployedMech.Name}");
+                }
+
+                if (ModInit.Settings.showRestoreNotification && ModState.deployedMechs.Count > 0)
+                {
+                    Traverse.Create(__instance).Field("interruptQueue").GetValue<SimGameInterruptManager>()
+                        .QueuePauseNotification("Mechs Restored",
+                            "As per the terms of the contract, our employer has repaired, replaced, and refitted our damaged and destroyed units. Our pilots are another story, however.",
+                            __instance.GetCrewPortrait(SimGameCrew.Crew_Darius), "", null, "Continue", null, null);
+                }
+                
                 if (ModState.DynamicTrainingMissionsDict.ContainsKey(__state.GenerateID()))
                 {
                     ModState.DynamicTrainingMissionsDict.Remove(__state.GenerateID());
