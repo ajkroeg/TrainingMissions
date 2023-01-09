@@ -32,16 +32,16 @@ namespace TrainingMissions
         public static class LCP_ContinueConfirmClicked
         {
 
-            public static void Prefix(LanceConfiguratorPanel __instance, LanceLoadoutSlot[] ___loadoutSlots, bool ___mechWarningsCheckResolved)
+            public static void Prefix(LanceConfiguratorPanel __instance)
             {
                 ModState.runContinueConfirmClickedPost = false;
-                if (___mechWarningsCheckResolved)
+                if (__instance.mechWarningsCheckResolved)
                 {
                     ModState.runContinueConfirmClickedPost = true;
                 }
             }
 
-            public static void Postfix(LanceConfiguratorPanel __instance, LanceLoadoutSlot[] ___loadoutSlots)
+            public static void Postfix(LanceConfiguratorPanel __instance)
             {   
                 ModState.IsSimulatorMission = false;
                 if (ModInit.Settings.enableSimulationHotKey)
@@ -51,7 +51,7 @@ namespace TrainingMissions
                 }
                 
                 bool flag = false;
-                foreach (LanceLoadoutSlot lanceLoadoutSlot in ___loadoutSlots)
+                foreach (LanceLoadoutSlot lanceLoadoutSlot in __instance.loadoutSlots)
                 {
                     if (lanceLoadoutSlot.SelectedMech != null)
                     {
@@ -82,7 +82,7 @@ namespace TrainingMissions
                     if (hk) ModState.IsSimulatorMission = true;
                 }
 
-                var nonNullSlots = ___loadoutSlots.Where(x => x.SelectedMech != null);
+                var nonNullSlots = __instance.loadoutSlots.Where(x => x.SelectedMech != null);
 
                 MechDef newMech;
                 var lanceLoadoutSlots = nonNullSlots as LanceLoadoutSlot[] ?? nonNullSlots.ToArray();
@@ -146,7 +146,7 @@ namespace TrainingMissions
                     ModInit.modLog.LogMessage($"First mech in playerMechs was {ModState.playerMechs.First().mechDef.Name} with count {ModState.playerMechs.First().count}");
                     ModState.playerMechs = ModState.playerMechs.OrderBy(x => x.count).ToList();
                     ModInit.modLog.LogMessage($"Reordered! First mech in playerMechs is now {ModState.playerMechs.First().mechDef.Name} with count {ModState.playerMechs.First().count}");
-                    Traverse.Create(__result).Property("UnitDefID").SetValue(ModState.playerMechs[0].mechDef.Description.Id);
+                    __result.UnitDefID = ModState.playerMechs[0].mechDef.Description.Id;//Traverse.Create(__result).Property("UnitDefID").SetValue(ModState.playerMechs[0].mechDef.Description.Id);
                     ModState.playerMechs.First().count += 1;
                 }
             }
@@ -157,7 +157,7 @@ namespace TrainingMissions
         public static class UnitSpawnPointGameLogic_OverrideSpawn
         {
             static bool Prepare() => ModInit.Settings.SwapUnitsWithAIContractIDs.Count > 0;
-             public static bool Prefix(UnitSpawnPointGameLogic __instance, SpawnableUnit spawnableUnit, MechDef ___mechDefOverride, ref PilotDef ___pilotDefOverride, VehicleDef ___vehicleDefOverride, TurretDef ___turretDefOverride)
+             public static bool Prefix(UnitSpawnPointGameLogic __instance, SpawnableUnit spawnableUnit)
              { 
                  if (ModState.PlayerGetsAIMechs && __instance.team == TeamDefinition.Player1TeamDefinitionGuid && spawnableUnit.unitType == UnitType.Mech) 
                  {
@@ -170,25 +170,25 @@ namespace TrainingMissions
                     var newMechDef = AIMechVariants.FirstOrDefault()?.mechDef;
                     newMechDef.DependenciesLoaded(1000U);
 
-                    ___mechDefOverride = newMechDef;
+                    __instance.mechDefOverride = newMechDef;
                     ModInit.modLog.LogMessage(
-                        $"PLAYER UNIT: mechDefOverride set to {___mechDefOverride.Description.Id}");
+                        $"PLAYER UNIT: mechDefOverride set to {__instance.mechDefOverride.Description.Id}");
 
-                    ___pilotDefOverride = spawnableUnit.Pilot;
+                    __instance.pilotDefOverride = spawnableUnit.Pilot;
                     ModInit.modLog.LogMessage(
-                        $"PLAYER UNIT: pilotDefOverride set to {___pilotDefOverride.Description.Id}");
+                        $"PLAYER UNIT: pilotDefOverride set to {__instance.pilotDefOverride.Description.Id}");
 
                     __instance.pilotDefId = spawnableUnit.PilotId;
                     ModInit.modLog.LogMessage(
-                        $"PLAYER UNIT: __instance.pilotDefId is {__instance.pilotDefId}, should be {___pilotDefOverride.Description.Id}");
+                        $"PLAYER UNIT: __instance.pilotDefId is {__instance.pilotDefId}, should be {__instance.pilotDefOverride.Description.Id}");
 
                     __instance.mechDefId = newMechDef.Description.Id;
                     ModInit.modLog.LogMessage(
-                        $"PLAYER UNIT: __instance.mechDefId is {__instance.mechDefId}, should be {___mechDefOverride.Description.Id}");
+                        $"PLAYER UNIT: __instance.mechDefId is {__instance.mechDefId}, should be {__instance.mechDefOverride.Description.Id}");
 
                     __instance.unitType = spawnableUnit.unitType;
-                    ___vehicleDefOverride = spawnableUnit.VUnit;
-                    ___turretDefOverride = spawnableUnit.TUnit;
+                    __instance.vehicleDefOverride = spawnableUnit.VUnit;
+                    __instance.turretDefOverride = spawnableUnit.TUnit;
                     __instance.vehicleDefId = spawnableUnit.UnitId;
                     __instance.turretDefId = spawnableUnit.UnitId;
                     return false;
@@ -271,15 +271,15 @@ namespace TrainingMissions
         [HarmonyPatch(typeof(AAR_UnitStatusWidget), "FillInData", new Type[] {typeof(int)})]
         public static class AAR_UnitStatusWidget_FillInDataPatch
         {
-            public static void Postfix(AAR_UnitStatusWidget __instance, Contract ___contract, UnitResult ___UnitData)
+            public static void Postfix(AAR_UnitStatusWidget __instance)
             {
                 if (ModInit.Settings.SwapUnitsWithAIContractIDs.ContainsKey(contractID))
                 {
                     if (ModInit.Settings.SwapUnitsWithAIContractIDs[contractID] == "RECOVER")
                     {
-                        if (!___UnitData.mech.MechTags.Any(x => ModInit.Settings.DisallowedRecoveryTags.Contains(x)))
+                        if (!__instance.UnitData.mech.MechTags.Any(x => ModInit.Settings.DisallowedRecoveryTags.Contains(x)))
                         {
-                            ModState.recoveredMechDefs.Add(___UnitData.mech);
+                            ModState.recoveredMechDefs.Add(__instance.UnitData.mech);
                         }
                     }
                 }
@@ -291,16 +291,19 @@ namespace TrainingMissions
         {
             [HarmonyPriority(Priority.Last)]
             
-            public static void Postfix(Contract __instance, ref List<SalvageDef> ___finalPotentialSalvage)
+            public static void Postfix(Contract __instance)
             {
                 if (ModInit.Settings.SwapUnitsWithAIContractIDs.ContainsKey(contractID))
                 {
                     if (ModInit.Settings.SwapUnitsWithAIContractIDs[contractID] == "SIMULATOR")
                     {
-                        Traverse.Create(__instance).Property("EmployerReputationResults").SetValue(0);
-                        Traverse.Create(__instance).Property("TargetReputationResults").SetValue(0);
-                        Traverse.Create(__instance).Property("SalvageResults").SetValue(new List<SalvageDef>());
-                        ___finalPotentialSalvage = new List<SalvageDef>();
+                        __instance.EmployerReputationResults = 0;
+                        __instance.TargetReputationResults = 0;
+                        __instance.SalvageResults = new List<SalvageDef>();
+                        //Traverse.Create(__instance).Property("EmployerReputationResults").SetValue(0);
+                        //Traverse.Create(__instance).Property("TargetReputationResults").SetValue(0);
+                        //Traverse.Create(__instance).Property("SalvageResults").SetValue(new List<SalvageDef>());
+                        __instance.finalPotentialSalvage = new List<SalvageDef>();
                         foreach (var unitresult in __instance.PlayerUnitResults)
                         {
                             var pilotID = unitresult.pilot.Description.Id;
@@ -316,10 +319,13 @@ namespace TrainingMissions
                 {
                     if (ModInit.Settings.DoppelgangerContractIDs[contractID] == "SIMULATOR")
                     {
-                        Traverse.Create(__instance).Property("EmployerReputationResults").SetValue(0);
-                        Traverse.Create(__instance).Property("TargetReputationResults").SetValue(0);
-                        Traverse.Create(__instance).Property("SalvageResults").SetValue(new List<SalvageDef>());
-                        ___finalPotentialSalvage = new List<SalvageDef>();
+                        __instance.EmployerReputationResults = 0;
+                        __instance.TargetReputationResults = 0;
+                        __instance.SalvageResults = new List<SalvageDef>();
+                        //Traverse.Create(__instance).Property("EmployerReputationResults").SetValue(0);
+                        //Traverse.Create(__instance).Property("TargetReputationResults").SetValue(0);
+                        //Traverse.Create(__instance).Property("SalvageResults").SetValue(new List<SalvageDef>());
+                        __instance.finalPotentialSalvage = new List<SalvageDef>();
                         foreach (var unitresult in __instance.PlayerUnitResults)
                         {
                             var pilotID = unitresult.pilot.Description.Id;
@@ -334,11 +340,11 @@ namespace TrainingMissions
 
                 else if (ModState.IsSimulatorMission)
                 {
-                    Traverse.Create(__instance).Property("EmployerReputationResults").SetValue(0);
-                    Traverse.Create(__instance).Property("TargetReputationResults").SetValue(0);
-                    Traverse.Create(__instance).Property("MoneyResults").SetValue(0);
-                    Traverse.Create(__instance).Property("SalvageResults").SetValue(new List<SalvageDef>());
-                    ___finalPotentialSalvage = new List<SalvageDef>();
+                    __instance.EmployerReputationResults = 0;//Traverse.Create(__instance).Property("EmployerReputationResults").SetValue(0);
+                    __instance.TargetReputationResults = 0;//Traverse.Create(__instance).Property("TargetReputationResults").SetValue(0);
+                    __instance.MoneyResults = 0;//Traverse.Create(__instance).Property("MoneyResults").SetValue(0);
+                    __instance.SalvageResults = new List<SalvageDef>();//Traverse.Create(__instance).Property("SalvageResults").SetValue(new List<SalvageDef>());
+                    __instance.finalPotentialSalvage = new List<SalvageDef>();
                     foreach (var unitresult in __instance.PlayerUnitResults)
                     {
                         var pilotID = unitresult.pilot.Description.Id;
@@ -488,8 +494,7 @@ namespace TrainingMissions
 
                 if (ModInit.Settings.showRestoreNotification && ModState.deployedMechs.Count > 0)
                 {
-                    Traverse.Create(__instance).Field("interruptQueue").GetValue<SimGameInterruptManager>()
-                        .QueuePauseNotification("Mechs Restored",
+                    __instance.interruptQueue.QueuePauseNotification("Mechs Restored",
                             "As per the terms of the contract, our employer has repaired, replaced, and refitted our damaged and destroyed units. Our pilots are another story, however.",
                             __instance.GetCrewPortrait(SimGameCrew.Crew_Darius), "", null, "Continue", null, null);
                 }
