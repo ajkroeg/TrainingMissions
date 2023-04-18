@@ -1,5 +1,4 @@
 ﻿using System;
-using Harmony;
 using BattleTech;
 using System.Linq;
 using System.Collections.Generic;
@@ -157,10 +156,11 @@ namespace TrainingMissions
         public static class UnitSpawnPointGameLogic_OverrideSpawn
         {
             static bool Prepare() => ModInit.Settings.SwapUnitsWithAIContractIDs.Count > 0;
-             public static bool Prefix(UnitSpawnPointGameLogic __instance, SpawnableUnit spawnableUnit)
-             { 
-                 if (ModState.PlayerGetsAIMechs && __instance.team == TeamDefinition.Player1TeamDefinitionGuid && spawnableUnit.unitType == UnitType.Mech) 
-                 {
+            public static void Prefix (ref bool __runOriginal, UnitSpawnPointGameLogic __instance, SpawnableUnit spawnableUnit)
+            {
+                if (!__runOriginal) return;
+                if (ModState.PlayerGetsAIMechs && __instance.team == TeamDefinition.Player1TeamDefinitionGuid && spawnableUnit.unitType == UnitType.Mech) 
+                {
                     ModInit.modLog.LogMessage(
                         $"PLAYER UNIT: First mech in AIMechVariants was {ModState.AIMechs.First().mechDef.Name} with count {ModState.AIMechs.First().count}");
                     var AIMechVariants = ModState.AIMechs.OrderBy(x => x.count).ToList();
@@ -191,11 +191,13 @@ namespace TrainingMissions
                     __instance.turretDefOverride = spawnableUnit.TUnit;
                     __instance.vehicleDefId = spawnableUnit.UnitId;
                     __instance.turretDefId = spawnableUnit.UnitId;
-                    return false;
-                 }
+                    __runOriginal = false;
+                    return;
+                }
 
-                return true;
-             }
+                __runOriginal = true;
+                return;
+            }
         }
 
         [HarmonyPatch(typeof(Mech), "AddToTeam")]

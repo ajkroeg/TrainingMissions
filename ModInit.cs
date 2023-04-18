@@ -1,5 +1,4 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -27,8 +26,9 @@ namespace TrainingMissions
 
             modLog = new Logger(modDir, "TrainingMissions", Settings.enableLogging);
             ModInit.modLog.LogMessage($"Initializing TrainingMissions - Version {typeof(TrainingMissionsSettings).Assembly.GetName().Version}");
-            var harmony = HarmonyInstance.Create(HarmonyPackage);
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            //var harmony = HarmonyInstance.Create(HarmonyPackage);
+            //harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), HarmonyPackage);
         }
     }
     public class TrainingMissionsSettings

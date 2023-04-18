@@ -1,8 +1,7 @@
 # TrainingMissions
 
 **DependsOn IRBTModUtils**
-
-## Training Missions
+** v1.1.0.0 and higher requires modtek v3 or higher**
 
 Allows "training missions" that auto-repair and restore your damaged and destroyed mechs after combat.
  
