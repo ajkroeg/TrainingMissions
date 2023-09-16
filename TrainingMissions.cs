@@ -121,8 +121,14 @@ namespace TrainingMissions
 //                    ModState.IsTrainingMission = true;
                     foreach (var slot in lanceLoadoutSlots)
                     {
-                        ModState.deployedMechs.Add(slot.SelectedMech.MechDef);
-                        ModInit.modLog.LogMessage($"Adding {slot.SelectedMech.MechDef.Name} to deployedMechs for restore");
+                        foreach (var kvp in new Dictionary<int, MechDef>(__instance.Sim.ActiveMechs))
+                        {
+                            if (slot.SelectedMech.MechDef.GUID == kvp.Value.GUID)
+                            {
+                                ModState.deployedMechs.Add(slot.SelectedMech.MechDef);
+                                ModInit.modLog.LogMessage($"Adding {slot.SelectedMech.MechDef.Name} to deployedMechs for restore");
+                            } 
+                        }
                     }
                 }
             }
